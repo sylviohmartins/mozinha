@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedido de Namoro</title>
+  <style>
+    body {
+      font-family: 'Courier New', Courier, monospace;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle, #0d1b2a 30%, #1b263b 100%);
+      color: #ff4b5c;
+      overflow: hidden;
+    }
+
+    h1 {
+      color: #38bdf8;
+      font-size: 48px;
+      margin-top: 50px;
+      text-shadow: 2px 2px #000;
+      text-transform: uppercase;
+    }
+
+    .pedido {
+      margin-bottom: 30px;
+    }
+
+    .botoes {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 50px;
+    }
+
+    .botao {
+      padding: 15px 30px;
+      font-size: 20px;
+      font-weight: bold;
+      text-transform: uppercase;
+      border: 2px solid #ff4b5c;
+      border-radius: 8px;
+      background: #1b263b;
+      color: #ff4b5c;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 4px 10px rgba(255, 75, 92, 0.4);
+    }
+
+    .botao:hover {
+      background: #ff4b5c;
+      color: #fff;
+      transform: scale(1.1);
+    }
+
+    .botao:active {
+      transform: scale(0.9);
+      box-shadow: none;
+    }
+
+    #nao {
+      position: absolute;
+    }
+
+    #nao:hover {
+      transform: scale(1.2) rotate(-10deg);
+      background: #f44336;
+      color: #fff;
+    }
+
+    .animacao {
+      display: none;
+      margin-top: 30px;
+      font-size: 24px;
+      color: #38bdf8;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    .claw-marks {
+      position: absolute;
+      width: 120px;
+      height: 100px;
+      background: repeating-linear-gradient(
+        to bottom right,
+        transparent,
+        transparent 4px,
+        #ff4b5c 4px,
+        #ff4b5c 6px
+      );
+      transform: rotate(-45deg);
+      opacity: 0.7;
+      animation: scratch 1s infinite alternate;
+    }
+
+    @keyframes scratch {
+      0% {
+        opacity: 0.3;
+        transform: rotate(-45deg) scale(1);
+      }
+      100% {
+        opacity: 0.7;
+        transform: rotate(-45deg) scale(1.1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="pedido">
+    <h1>Quer namorar comigo?</h1>
+  </div>
+  <div class="botoes">
+    <button id="sim" class="botao">Sim</button>
+    <button id="nao" class="botao">Não</button>
+  </div>
+  <div id="animacao" class="animacao">
+    pluuuuuuuuuuuuuuuuuuuuuuuuu
+  </div>
+
+  <div class="claw-marks" style="top: 50px; left: 20%;"></div>
+  <div class="claw-marks" style="top: 150px; right: 30%;"></div>
+  <div class="claw-marks" style="bottom: 100px; left: 40%;"></div>
+
+  <script>
+    const simButton = document.getElementById('sim');
+    const naoButton = document.getElementById('nao');
+    const animacaoDiv = document.getElementById('animacao');
+
+    function moverBotaoNao() {
+      const maxX = window.innerWidth - naoButton.offsetWidth;
+      const maxY = window.innerHeight - naoButton.offsetHeight;
+      const newX = Math.random() * maxX;
+      const newY = Math.random() * maxY;
+      naoButton.style.left = `${newX}px`;
+      naoButton.style.top = `${newY}px`;
+    }
+
+    simButton.addEventListener('click', () => {
+      simButton.style.display = 'none';
+      naoButton.style.display = 'none';
+      animacaoDiv.style.display = 'block';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      const naoButtonRect = naoButton.getBoundingClientRect();
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+
+      const distance = Math.sqrt(
+        (mouseX - (naoButtonRect.left + naoButtonRect.width / 2)) ** 2 +
+        (mouseY - (naoButtonRect.top + naoButtonRect.height / 2)) ** 2
+      );
+
+      if (distance < 100) {
+        moverBotaoNao();
+      }
+    });
+  </script>
+</body>
+</html>
