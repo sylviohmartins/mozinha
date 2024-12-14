@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajuste no Balancete</title>
+    <title>PLUUUU</title>
     <style>
         body {
             font-family: "Comic Sans MS", Arial, sans-serif;
@@ -94,11 +94,11 @@
             cursor: pointer;
             border-radius: 5px;
         }
-        #loading {
+        #loading, #loading-2 {
             display: none;
             text-align: center;
         }
-        #loading img {
+        #loading img, #loading-2 img {
             width: 200px;
             height: 200px;
             border-radius: 50%;
@@ -163,6 +163,19 @@
         <button id="retry-button" onclick="startGame()">Tentar novamente</button>
     </div>
 
+    <div id="step-4" style="display: none;">
+        <h1>Adivinhe: ONDE É A TOCA DE UM DOS GATOS?</h1>
+        <div id="word-container-2"></div>
+        <div id="keyboard-2"></div>
+        <div id="message-2"></div>
+        <button id="retry-button-2" onclick="startGame2()">Tentar novamente</button>
+    </div>
+    
+    <div id="loading-2" style="display: none;">
+        <img src="loading.jpg" alt="Carregando...">
+        <p>Carregando...</p>
+    </div>    
+
     <div id="loading">
         <img src="loading.jpg" alt="Carregando...">
         <p>Carregando...</p>
@@ -175,6 +188,7 @@
     </div>
 
     <div id="video-container">
+        <h1>ache o precioso!</h1>
         <iframe src="https://www.tiktok.com/embed/7238253939613830406" allowfullscreen></iframe>
         <button onclick="redirectToTikTok()">Abrir no TikTok</button>
     </div>
@@ -308,6 +322,95 @@
         function redirectToTikTok() {
             window.open("https://www.tiktok.com/@salvekay/video/7238253939613830406", "_blank");
         }
+
+        const phrase2 = "SOFA";
+        let guessedLetters2 = [];
+        let remainingAttempts2 = 6;
+
+        function startGame2() {
+            guessedLetters2 = [];
+            remainingAttempts2 = 6;
+            const wordContainer2 = document.getElementById("word-container-2");
+            const keyboard2 = document.getElementById("keyboard-2");
+            const message2 = document.getElementById("message-2");
+            const retryButton2 = document.getElementById("retry-button-2");
+
+            wordContainer2.innerHTML = "";
+            keyboard2.innerHTML = "";
+            message2.textContent = "";
+            retryButton2.style.display = "none";
+
+            for (let char of phrase2) {
+                const span = document.createElement("span");
+                span.classList.add("letter");
+                span.textContent = char === " " ? " " : "_";
+                wordContainer2.appendChild(span);
+            }
+
+            const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            for (let letter of alphabet) {
+                const button = document.createElement("button");
+                button.classList.add("key");
+                button.textContent = letter;
+                button.onclick = () => handleGuess2(letter);
+                keyboard2.appendChild(button);
+            }
+        }
+
+        function handleGuess2(letter) {
+            guessedLetters2.push(letter);
+            const buttons2 = document.querySelectorAll("#keyboard-2 .key");
+            buttons2.forEach(button => {
+                if (button.textContent === letter) {
+                    button.disabled = true;
+                }
+            });
+
+            let correctGuess = false;
+            const spans2 = document.querySelectorAll("#word-container-2 .letter");
+            for (let i = 0; i < phrase2.length; i++) {
+                if (phrase2[i] === letter) {
+                    spans2[i].textContent = letter;
+                    correctGuess = true;
+                }
+            }
+
+            if (!correctGuess) {
+                remainingAttempts2--;
+            }
+
+            checkGameState2();
+        }
+
+        function checkGameState2() {
+            const spans2 = document.querySelectorAll("#word-container-2 .letter");
+            const currentPhrase2 = Array.from(spans2).map(span => span.textContent).join("");
+
+            if (currentPhrase2 === phrase2) {
+                showLoading2();
+            } else if (remainingAttempts2 <= 0) {
+                const message2 = document.getElementById("message-2");
+                message2.textContent = `Você perdeu! A resposta era: "${phrase2}"`;
+                const retryButton2 = document.getElementById("retry-button-2");
+                retryButton2.style.display = "block";
+            }
+        }
+
+        function showLoading2() {
+            document.getElementById("step-4").style.display = "none";
+            document.getElementById("loading-2").style.display = "block";
+            setTimeout(() => {
+                document.getElementById("loading-2").style.display = "none";
+                document.getElementById("video-container").style.display = "block";
+            }, 2000);
+        }
+
+        function successAnswer() {
+            document.getElementById("final-message").style.display = "none";
+            document.getElementById("step-4").style.display = "block";
+            startGame2();
+        }
+
     </script>
 </body>
 </html>
