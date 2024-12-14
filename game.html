@@ -45,62 +45,161 @@
             margin-top: 20px;
             font-size: 1.5rem;
         }
-        #animated-text {
-            font-size: 1.5rem;
-            margin-top: 20px;
+        #word-container {
+            font-size: 2rem;
+            margin: 20px;
+            letter-spacing: 5px;
         }
         .letter {
             display: inline-block;
-            opacity: 0;
-            background-color: black;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            border-bottom: 2px solid #ff6699;
             color: white;
-            padding: 5px;
-            margin: 2px;
-            animation: fadeIn 0.5s forwards;
+            margin: 0 5px;
         }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+        #keyboard {
+            margin-top: 20px;
+        }
+        .key {
+            background-color: #ff6699;
+            color: #003366;
+            border: none;
+            padding: 10px;
+            font-size: 1.2rem;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .key:hover {
+            background-color: #ff3366;
+        }
+        .key:disabled {
+            background-color: #666;
+            cursor: not-allowed;
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 1.5rem;
+        }
+        #retry-button {
+            display: none;
+            background-color: #ff6699;
+            color: #003366;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #loading {
+            display: none;
+            text-align: center;
+        }
+        #loading img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            animation: spin 10s linear infinite;
+        }
+        #video-container {
+            display: none;
+            margin-top: 20px;
+        }
+        iframe {
+            width: 320px;
+            height: 480px;
+            border: none;
+        }
+        #video-container button {
+            margin-top: 10px;
+            background-color: #ff6699;
+            color: #003366;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+        }
+        #video-container button:hover {
+            background-color: #ff3366;
+        }
+        #error-message {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        #error-message h1 {
+            font-size: 2rem;
+            color: #ff3366;
+        }
+        #error-message p {
+            font-size: 1.5rem;
+            color: #ffffff;
         }
     </style>
 </head>
 <body>
     <div id="step-1">
         <h1>momozinhaaaaaaa</h1>
-        <p>o Stitch identificou tem uma nota fiscal pendente. ce num vai ver nao cabecinha?</p>
+        <p>o Stitch identificou tem uma nota fiscal pendente. vai sair do insta pra ver?</p>
         <button onclick="nextStep()">uhummm</button>
     </div>
 
     <div id="step-2" style="display: none;">
         <h1>Revisando os lançamentos...</h1>
-        <p>essa nota é muito cara. bora resolver?</p>
+        <p>vishhh, essa nota é muito cara. vamos la ne?</p>
         <button onclick="finalStep()">uhummm</button>
     </div>
 
     <div id="step-3" style="display: none;">
-        <h1>a proposta é a seguinte mocraista</h1>
-        <p id="animated-text"></p>
-        <button onclick="success()">simm</button>
-        <button onclick="error()">num seeeeei</button>
+        <h1>achou que ia achar o problema facil ne</h1>
+        <p>Adivinhe a frase: "o que eu mais falo quando estou com voce?"</p>
+        <div id="word-container"></div>
+        <div id="keyboard"></div>
+        <div id="message"></div>
+        <button id="retry-button" onclick="startGame()">Tentar novamente</button>
     </div>
 
-    <div id="final-message">
-        <p id="success-message" style="display: none;">momozinha? queeeeeeeeeeeeeeeee! plu. ❤️</p>
-        <p id="error-message" style="display: none;">meuuuuuuuuuuuuuuuuuuuuuuuuuuuuu.</p>
-        <button id="retry-button" style="display: none;" onclick="retry()">faz de novo meuuu</button>
-        <div id="video-container" style="display: none;">
-            <iframe src="https://www.tiktok.com/embed/7238253939613830406" width="320" height="480" frameborder="0" allowfullscreen></iframe>
-        </div>
+    <div id="loading">
+        <img src="loading.jpg" alt="Carregando...">
+        <p>Carregando...</p>
+    </div>
+
+    <div id="final-message" style="display: none;">
+        <h1>3 15 13 9 7 15 / 17 21 5 18 / 14 1 13 15 18 1 18 / ?</h1>
+        <button onclick="successAnswer()">Yesss</button>
+        <button onclick="showErrorMessage()">No</button>
+    </div>
+
+    <div id="video-container">
+        <iframe src="https://www.tiktok.com/embed/7238253939613830406" allowfullscreen></iframe>
+        <button onclick="redirectToTikTok()">Abrir no TikTok</button>
+    </div>
+
+    <div id="error-message">
+        <h1>meuuuuuuuuuuuuuuuuuuuuuuuuuuuuu.</h1>
+        <button onclick="retry()">Tentar novamente</button>
     </div>
 
     <script>
-        const text = "Quer namorar comigo?";
-        const animatedTextContainer = document.getElementById("animated-text");
-        const body = document.body;
+        const phrase = "MOMOZINHA".toUpperCase();
+        const wordContainer = document.getElementById("word-container");
+        const keyboard = document.getElementById("keyboard");
+        const message = document.getElementById("message");
+        const retryButton = document.getElementById("retry-button");
+        const loading = document.getElementById("loading");
+        const finalMessage = document.getElementById("final-message");
+        const videoContainer = document.getElementById("video-container");
+        const errorMessage = document.getElementById("error-message");
+
+        const successBackground = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCX5g801rH0L46r6QzroQWv4zvk-Hq5AxWaw&s";
+        const errorBackground = "https://e7.pngegg.com/pngimages/515/648/png-clipart-lilo-stitch-sticker-decal-the-walt-disney-company-others-miscellaneous-carnivoran.png";
+
+        let guessedLetters = [];
+        let remainingAttempts = 6;
 
         function nextStep() {
             document.getElementById('step-1').style.display = 'none';
@@ -110,42 +209,104 @@
         function finalStep() {
             document.getElementById('step-2').style.display = 'none';
             document.getElementById('step-3').style.display = 'block';
-            animateText();
+            startGame();
         }
 
-        function animateText() {
-            text.split('').forEach((char, index) => {
-                const span = document.createElement('span');
-                span.textContent = char;
-                span.className = 'letter';
-                span.style.animationDelay = `${index * 0.5}s`;
-                animatedTextContainer.appendChild(span);
+        function startGame() {
+            guessedLetters = [];
+            remainingAttempts = 6;
+            wordContainer.innerHTML = "";
+            keyboard.innerHTML = "";
+            message.textContent = "";
+            retryButton.style.display = "none";
+
+            for (let char of phrase) {
+                const span = document.createElement("span");
+                span.classList.add("letter");
+                span.textContent = char === " " ? " " : "_";
+                wordContainer.appendChild(span);
+            }
+
+            const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            for (let letter of alphabet) {
+                const button = document.createElement("button");
+                button.classList.add("key");
+                button.textContent = letter;
+                button.onclick = () => handleGuess(letter);
+                keyboard.appendChild(button);
+            }
+        }
+
+        function handleGuess(letter) {
+            guessedLetters.push(letter);
+            const buttons = document.querySelectorAll(".key");
+            buttons.forEach(button => {
+                if (button.textContent === letter) {
+                    button.disabled = true;
+                }
             });
+
+            let correctGuess = false;
+            const spans = document.querySelectorAll(".letter");
+            for (let i = 0; i < phrase.length; i++) {
+                if (phrase[i] === letter) {
+                    spans[i].textContent = letter;
+                    correctGuess = true;
+                }
+            }
+
+            if (!correctGuess) {
+                remainingAttempts--;
+            }
+
+            checkGameState();
         }
 
-        function success() {
-            document.getElementById('step-3').style.display = 'none';
-            document.getElementById('final-message').style.display = 'block';
-            document.getElementById('success-message').style.display = 'block';
-            document.getElementById('error-message').style.display = 'none';
-            document.getElementById('retry-button').style.display = 'none';
-            document.getElementById('video-container').style.display = 'block';
-            body.style.backgroundImage = "url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCX5g801rH0L46r6QzroQWv4zvk-Hq5AxWaw&s')";
+        function checkGameState() {
+            const spans = document.querySelectorAll(".letter");
+            const currentPhrase = Array.from(spans).map(span => span.textContent).join("");
+
+            if (currentPhrase === phrase) {
+                showLoading();
+            } else if (remainingAttempts <= 0) {
+                message.textContent = `Você perdeu! A frase era: "${phrase}"`;
+                endGame();
+            }
         }
 
-        function error() {
+        function showLoading() {
             document.getElementById('step-3').style.display = 'none';
-            document.getElementById('final-message').style.display = 'block';
-            document.getElementById('success-message').style.display = 'none';
-            document.getElementById('error-message').style.display = 'block';
-            document.getElementById('retry-button').style.display = 'inline-block';
-            body.style.backgroundImage = "url('https://e7.pngegg.com/pngimages/515/648/png-clipart-lilo-stitch-sticker-decal-the-walt-disney-company-others-miscellaneous-carnivoran.png')";
+            loading.style.display = 'block';
+            setTimeout(() => {
+                loading.style.display = 'none';
+                finalMessage.style.display = 'block';
+            }, 5000);
+        }
+
+        function endGame() {
+            const buttons = document.querySelectorAll(".key");
+            buttons.forEach(button => button.disabled = true);
+            retryButton.style.display = "block";
         }
 
         function retry() {
-            document.getElementById('final-message').style.display = 'none';
-            document.getElementById('step-1').style.display = 'block';
-            body.style.backgroundImage = "none";
+            location.reload();
+        }
+
+        function successAnswer() {
+            finalMessage.style.display = 'none';
+            videoContainer.style.display = 'block';
+            document.body.style.backgroundImage = `url('${successBackground}')`;
+        }
+
+        function showErrorMessage() {
+            finalMessage.style.display = 'none';
+            errorMessage.style.display = 'block';
+            document.body.style.backgroundImage = `url('${errorBackground}')`;
+        }
+
+        function redirectToTikTok() {
+            window.open("https://www.tiktok.com/@salvekay/video/7238253939613830406", "_blank");
         }
     </script>
 </body>
