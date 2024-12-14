@@ -194,7 +194,7 @@
     </div>
 
     <div id="error-message">
-        <h1>meuuuuuuuuuuuuuuuuuuuuuuuuuuuuu.</h1>
+        <p>meuuuuuuuuuuuuuuuuuuuuuuuuuuuuu.</p>
         <button onclick="retry()">Tentar novamente</button>
     </div>
 
@@ -401,8 +401,9 @@
             document.getElementById("loading-2").style.display = "block";
             setTimeout(() => {
                 document.getElementById("loading-2").style.display = "none";
+                document.body.style.backgroundImage = `url('${successBackground}')`; // Atualiza o background
                 document.getElementById("video-container").style.display = "block";
-            }, 2000);
+            }, 5000);
         }
 
         function successAnswer() {
